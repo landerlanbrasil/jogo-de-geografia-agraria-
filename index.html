@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Agrário: Conhecimentos do Campo</title>
+    <style>
+        :root {
+            --bg-color: #f4f1ea;
+            --primary: #27ae60;
+            --secondary: #2c3e50;
+            --text-dark: #333;
+            --white: #fff;
+            --error: #e74c3c;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #quiz-container {
+            background-color: var(--white);
+            width: 100%;
+            max-width: 700px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            overflow: hidden;
+            text-align: center;
+        }
+
+        #image-container {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 5rem;
+        }
+
+        #content {
+            padding: 30px;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background-color: var(--white);
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .option-btn:hover {
+            background-color: var(--secondary);
+            color: var(--white);
+        }
+
+        .option-btn.correct {
+            background-color: var(--primary) !important;
+            border-color: var(--primary) !important;
+            color: var(--white) !important;
+        }
+
+        .option-btn.wrong {
+            background-color: var(--error) !important;
+            border-color: var(--error) !important;
+            color: var(--white) !important;
+        }
+
+        #result-screen {
+            display: none;
+            padding: 40px 20px;
+        }
+
+        #result-screen h1 {
+            color: var(--primary);
+        }
+
+        #restart-btn {
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        #restart-btn:hover {
+            background-color: #219a52;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background-color: var(--secondary);
+            color: var(--white);
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="quiz-container">
+        <div class="status-bar">
+            <span id="question-counter">Iniciando...</span>
+            <span id="score-display">Pontos: 0</span>
+        </div>
+
+        <div id="quiz-screen">
+            <div id="image-container" style="background-color: #27ae60;">
+                <span id="quiz-emoji">🌾</span>
+            </div>
+            
+            <div id="content">
+                <h2 id="question-text">Se você está lendo isso, o Javascript está bloqueado no seu navegador.</h2>
+                <div class="options-grid" id="options-container">
+                    </div>
+            </div>
+        </div>
+
+        <div id="result-screen">
+            <h1>Fim de Jogo!</h1>
+            <p id="final-score-text">Você acertou X de Y perguntas.</p>
+            <p id="feedback-text"></p>
+            <button id="restart-btn" onclick="restartQuiz()">Jogar Novamente</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            // Pergunta 1: Agronegócio - Ponto Negativo
+            {
+                cor: "#e74c3c",
+                emoji: "☠️",
+                question: "O modelo tradicional do agronegócio frequentemente utiliza grandes extensões de terra para o cultivo de uma única espécie (monocultura). Qual é um dos principais impactos negativos dessa prática para o meio ambiente?",
+                options: [
+                    "Aumenta a diversidade de animais silvestres na região.",
+                    "Causa o esgotamento dos nutrientes do solo e exige uso intenso de agrotóxicos.",
+                    "Promove a regeneração natural das florestas nativas.",
+                    "Reduz drasticamente o consumo de água na região."
+                ],
+                correctAnswer: 1 
+            },
+            // Pergunta 2: Agronegócio - Ponto Positivo
+            {
+                cor: "#2980b9",
+                emoji: "📈",
+                question: "Apesar das críticas ambientais, o agronegócio tem uma importância indiscutível para a economia do Brasil. Qual é o seu principal ponto positivo?",
+                options: [
+                    "Gera grande superávit na balança comercial devido à alta exportação de commodities (como a soja).",
+                    "Distribui terras de forma igualitária para todos os trabalhadores rurais.",
+                    "Produz exclusivamente hortaliças para consumo nas pequenas cidades brasileiras.",
+                    "Não necessita de nenhuma ajuda ou financiamento do governo."
+                ],
+                correctAnswer: 0
+            },
+            // Pergunta 3: Agricultura Familiar - Ponto Positivo
+            {
+                cor: "#27ae60",
+                emoji: "🧺",
+                question: "A agricultura familiar é um pilar da nossa sociedade. Diferente do foco em exportação, qual é a sua principal contribuição para o Brasil?",
+                options: [
+                    "É responsável por produzir soja em massa para enviar para a China.",
+                    "Utiliza exclusivamente maquinário pesado de milhões de reais.",
+                    "Produz a maior parte da comida que chega à mesa dos brasileiros diariamente, garantindo segurança alimentar.",
+                    "Opera grandes latifúndios (propriedades gigantes) no centro-oeste do país."
+                ],
+                correctAnswer: 2
+            },
+            // Pergunta 4: Camponeses - Práticas
+            {
+                cor: "#8e44ad",
+                emoji: "🌱",
+                question: "As comunidades camponesas e tradicionais costumam ter uma relação mais sustentável com a terra. Uma prática comum e muito valiosa desses grupos é:",
+                options: [
+                    "O uso massivo de aviões para pulverizar agrotóxicos.",
+                    "O desmatamento de grandes áreas para criar gado.",
+                    "A guarda e o cultivo de 'sementes crioulas', preservando a biodiversidade genética local.",
+                    "A especulação imobiliária, vendendo terras apenas pelo lucro."
+                ],
+                correctAnswer: 2
+            },
+            // Pergunta 5: Estrutura Fundiária
+            {
+                cor: "#f39c12",
+                emoji: "🗺️",
+                question: "No Brasil, existe um forte debate sobre a concentração de terras. Como está dividida a terra entre os diferentes tipos de produtores?",
+                options: [
+                    "As terras são divididas em tamanhos iguais para todos os produtores do país.",
+                    "O agronegócio ocupa a menor parte das terras, mas emprega a maior quantidade de pessoas.",
+                    "A agricultura familiar ocupa todas as terras agricultáveis do país.",
+                    "Grandes propriedades rurais concentram a maior parte do território, enquanto a maioria dos agricultores familiares tem terras muito pequenas."
+                ],
+                correctAnswer: 3
+            },
+            // Pergunta 6: Tecnologia e Sociedade
+            {
+                cor: "#d35400",
+                emoji: "🚜",
+                question: "O agronegócio moderno é altamente tecnológico, utilizando GPS, drones e tratores guiados por satélite. O que essa 'modernização' costuma causar socialmente no campo?",
+                options: [
+                    "Aumento da necessidade de trabalho braçal em todas as lavouras.",
+                    "Diminuição dos postos de trabalho no campo, gerando o êxodo rural (pessoas migrando para a cidade).",
+                    "Fixação permanente das famílias no campo, sem necessidade de ir para a cidade.",
+                    "Barateamento imediato das tecnologias para os pequenos agricultores familiares."
+                ],
+                correctAnswer: 1
+            },
+            // Pergunta 7: Agricultura Familiar - Resiliência
+            {
+                cor: "#16a085",
+                emoji: "🥕",
+                question: "Em uma propriedade de agricultura familiar, é muito comum observar a 'policultura'. O que isso significa e por que é bom?",
+                options: [
+                    "Significa plantar apenas uma cultura (como milho) para esgotar o solo mais rápido.",
+                    "Significa cultivar várias espécies de plantas na mesma área, o que protege o solo e diminui o risco de perder tudo para uma praga.",
+                    "É o ato de criar gado e não plantar nada.",
+                    "Significa usar várias marcas diferentes de agrotóxicos na mesma planta."
+                ],
+                correctAnswer: 1
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let canAnswer = true;
+
+        function initQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            document.getElementById('quiz-screen').style.display = 'block';
+            document.getElementById('result-screen').style.display = 'none';
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            canAnswer = true;
+            const currentQ = questions[currentQuestionIndex];
+            
+            document.getElementById('image-container').style.backgroundColor = currentQ.cor;
+            document.getElementById('quiz-emoji').textContent = currentQ.emoji;
+
+            document.getElementById('question-text').textContent = currentQ.question;
+            
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            currentQ.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = option;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            updateUI();
+        }
+
+        function checkAnswer(selectedIndex, btnElement) {
+            if (!canAnswer) return; 
+            canAnswer = false;
+
+            const currentQ = questions[currentQuestionIndex];
+            const correctIndex = currentQ.correctAnswer;
+            const allButtons = document.getElementById('options-container').children;
+
+            if (selectedIndex === correctIndex) {
+                btnElement.classList.add('correct');
+                score++;
+            } else {
+                btnElement.classList.add('wrong');
+                allButtons[correctIndex].classList.add('correct'); 
+            }
+
+            updateUI();
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questions.length) {
+                    loadQuestion();
+                } else {
+                    showResults();
+                }
+            }, 2500); // Aumentei o tempo de espera para 2.5 segundos para a pessoa conseguir ler a resposta certa
+        }
+
+        function updateUI() {
+            document.getElementById('question-counter').textContent = `Pergunta ${currentQuestionIndex + 1} de ${questions.length}`;
+            document.getElementById('score-display').textContent = `Pontos: ${score}`;
+        }
+
+        function showResults() {
+            document.getElementById('quiz-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            
+            document.getElementById('final-score-text').textContent = `Você acertou ${score} de ${questions.length} perguntas.`;
+            
+            const feedbackText = document.getElementById('feedback-text');
+            let percentage = (score / questions.length) * 100;
+            if (percentage === 100) {
+                feedbackText.textContent = "Excelente! Você tem uma visão crítica e profunda sobre o campo brasileiro.";
+            } else if (percentage >= 50) {
+                feedbackText.textContent = "Bom trabalho! Você compreende bem a complexidade da nossa agricultura.";
+            } else {
+                feedbackText.textContent = "Há muito o que aprender sobre nossa terra e a disputa de espaços no campo. Tente novamente!";
+            }
+        }
+
+        function restartQuiz() {
+            initQuiz();
+        }
+
+        initQuiz();
+    </script>
+</body>
+</html>
