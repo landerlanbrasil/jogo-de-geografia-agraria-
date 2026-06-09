@@ -2,8 +2,8 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Agrário: Conhecimentos do Campo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Trabalho de Geografia Agrária</title>
     <style>
         :root {
             --bg-color: #f4f1ea;
@@ -14,44 +14,63 @@
             --error: #e74c3c;
         }
 
+        /* Ajustes globais para evitar zoom acidental no celular */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-dark);
-            margin: 0;
-            padding: 20px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             min-height: 100vh;
+            padding: 15px;
+        }
+
+        /* Título Principal */
+        .main-title {
+            color: var(--secondary);
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         #quiz-container {
             background-color: var(--white);
             width: 100%;
-            max-width: 700px;
+            max-width: 600px;
             border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
             overflow: hidden;
-            text-align: center;
+            display: flex;
+            flex-direction: column;
         }
 
+        /* Área Visual Ajustada para Celular */
         #image-container {
             width: 100%;
-            height: 200px;
+            height: 150px; /* Menor para economizar espaço de tela */
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 5rem;
+            font-size: 4rem; /* Emoji um pouco menor */
         }
 
         #content {
-            padding: 30px;
+            padding: 20px;
         }
 
         h2 {
-            margin-top: 0;
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             color: var(--secondary);
             margin-bottom: 20px;
             line-height: 1.4;
@@ -60,27 +79,30 @@
         .options-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 12px;
+            gap: 10px;
         }
 
+        /* Botões mais confortáveis para o toque (Touch Targets) */
         .option-btn {
             background-color: var(--white);
             border: 2px solid var(--secondary);
             color: var(--secondary);
-            padding: 12px;
-            font-size: 1rem;
-            font-weight: bold;
+            padding: 14px;
+            font-size: 0.95rem;
+            font-weight: 600;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s ease;
             text-align: left;
+            line-height: 1.3;
         }
 
-        .option-btn:hover {
-            background-color: var(--secondary);
-            color: var(--white);
+        /* Efeito de clique no celular */
+        .option-btn:active {
+            transform: scale(0.98);
         }
 
+        /* Classes de Correção */
         .option-btn.correct {
             background-color: var(--primary) !important;
             border-color: var(--primary) !important;
@@ -95,11 +117,18 @@
 
         #result-screen {
             display: none;
-            padding: 40px 20px;
+            padding: 30px 20px;
+            text-align: center;
         }
 
         #result-screen h1 {
             color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        #result-screen p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
         }
 
         #restart-btn {
@@ -110,26 +139,39 @@
             font-size: 1.1rem;
             border-radius: 8px;
             cursor: pointer;
-            margin-top: 20px;
+            margin-top: 10px;
             font-weight: bold;
+            width: 100%;
         }
 
-        #restart-btn:hover {
+        #restart-btn:active {
             background-color: #219a52;
         }
 
         .status-bar {
             display: flex;
             justify-content: space-between;
-            padding: 10px 20px;
+            padding: 12px 20px;
             background-color: var(--secondary);
             color: var(--white);
             font-size: 0.9rem;
             font-weight: bold;
         }
+
+        /* Media Query para telas maiores (PCs e Tablets) */
+        @media (min-width: 600px) {
+            body { padding: 40px 20px; }
+            .main-title { font-size: 2rem; margin-bottom: 25px;}
+            #image-container { height: 200px; font-size: 5rem; }
+            h2 { font-size: 1.25rem; }
+            .option-btn { font-size: 1rem; }
+            .option-btn:hover { background-color: var(--secondary); color: var(--white); }
+        }
     </style>
 </head>
 <body>
+
+    <h1 class="main-title">Trabalho de Geografia Agrária</h1>
 
     <div id="quiz-container">
         <div class="status-bar">
@@ -143,23 +185,23 @@
             </div>
             
             <div id="content">
-                <h2 id="question-text">Se você está lendo isso, o Javascript está bloqueado no seu navegador.</h2>
+                <h2 id="question-text">Carregando as perguntas...</h2>
                 <div class="options-grid" id="options-container">
-                    </div>
+                    <!-- Botões gerados via JS -->
+                </div>
             </div>
         </div>
 
         <div id="result-screen">
-            <h1>Fim de Jogo!</h1>
+            <h1>Fim do Questionário!</h1>
             <p id="final-score-text">Você acertou X de Y perguntas.</p>
             <p id="feedback-text"></p>
-            <button id="restart-btn" onclick="restartQuiz()">Jogar Novamente</button>
+            <button id="restart-btn" onclick="restartQuiz()">Tentar Novamente</button>
         </div>
     </div>
 
     <script>
         const questions = [
-            // Pergunta 1: Agronegócio - Ponto Negativo
             {
                 cor: "#e74c3c",
                 emoji: "☠️",
@@ -172,81 +214,123 @@
                 ],
                 correctAnswer: 1 
             },
-            // Pergunta 2: Agronegócio - Ponto Positivo
             {
                 cor: "#2980b9",
                 emoji: "📈",
                 question: "Apesar das críticas ambientais, o agronegócio tem uma importância indiscutível para a economia do Brasil. Qual é o seu principal ponto positivo?",
                 options: [
-                    "Gera grande superávit na balança comercial devido à alta exportação de commodities (como a soja).",
+                    "Gera grande superávit na balança comercial devido à alta exportação de commodities.",
                     "Distribui terras de forma igualitária para todos os trabalhadores rurais.",
-                    "Produz exclusivamente hortaliças para consumo nas pequenas cidades brasileiras.",
+                    "Produz exclusivamente hortaliças para consumo nas pequenas cidades.",
                     "Não necessita de nenhuma ajuda ou financiamento do governo."
                 ],
                 correctAnswer: 0
             },
-            // Pergunta 3: Agricultura Familiar - Ponto Positivo
             {
                 cor: "#27ae60",
                 emoji: "🧺",
-                question: "A agricultura familiar é um pilar da nossa sociedade. Diferente do foco em exportação, qual é a sua principal contribuição para o Brasil?",
+                question: "Diferente do foco em exportação do agronegócio, qual é a principal contribuição da Agricultura Familiar para o Brasil?",
                 options: [
                     "É responsável por produzir soja em massa para enviar para a China.",
-                    "Utiliza exclusivamente maquinário pesado de milhões de reais.",
-                    "Produz a maior parte da comida que chega à mesa dos brasileiros diariamente, garantindo segurança alimentar.",
-                    "Opera grandes latifúndios (propriedades gigantes) no centro-oeste do país."
+                    "Utiliza exclusivamente maquinário pesado e robótica avançada.",
+                    "Produz a maior parte da comida que chega à mesa dos brasileiros, garantindo a segurança alimentar.",
+                    "Opera grandes latifúndios improdutivos no centro-oeste."
                 ],
                 correctAnswer: 2
             },
-            // Pergunta 4: Camponeses - Práticas
             {
                 cor: "#8e44ad",
                 emoji: "🌱",
-                question: "As comunidades camponesas e tradicionais costumam ter uma relação mais sustentável com a terra. Uma prática comum e muito valiosa desses grupos é:",
+                question: "As comunidades camponesas e tradicionais possuem práticas sustentáveis. Uma prática comum e valiosa desses grupos é:",
                 options: [
                     "O uso massivo de aviões para pulverizar agrotóxicos.",
-                    "O desmatamento de grandes áreas para criar gado.",
-                    "A guarda e o cultivo de 'sementes crioulas', preservando a biodiversidade genética local.",
-                    "A especulação imobiliária, vendendo terras apenas pelo lucro."
+                    "O desmatamento de grandes áreas para especulação imobiliária.",
+                    "A guarda e o cultivo de 'sementes crioulas', preservando a biodiversidade genética.",
+                    "A queima anual de todas as áreas de preservação."
                 ],
                 correctAnswer: 2
             },
-            // Pergunta 5: Estrutura Fundiária
             {
                 cor: "#f39c12",
                 emoji: "🗺️",
-                question: "No Brasil, existe um forte debate sobre a concentração de terras. Como está dividida a terra entre os diferentes tipos de produtores?",
+                question: "No Brasil, existe um forte debate sobre a concentração fundiária. Como está dividida a terra entre os produtores?",
                 options: [
-                    "As terras são divididas em tamanhos iguais para todos os produtores do país.",
+                    "As terras são divididas em tamanhos exatamente iguais para todos.",
                     "O agronegócio ocupa a menor parte das terras, mas emprega a maior quantidade de pessoas.",
                     "A agricultura familiar ocupa todas as terras agricultáveis do país.",
-                    "Grandes propriedades rurais concentram a maior parte do território, enquanto a maioria dos agricultores familiares tem terras muito pequenas."
+                    "Grandes propriedades (latifúndios) concentram a maior parte do território, enquanto a maioria dos agricultores familiares possui propriedades muito pequenas."
                 ],
                 correctAnswer: 3
             },
-            // Pergunta 6: Tecnologia e Sociedade
             {
                 cor: "#d35400",
                 emoji: "🚜",
-                question: "O agronegócio moderno é altamente tecnológico, utilizando GPS, drones e tratores guiados por satélite. O que essa 'modernização' costuma causar socialmente no campo?",
+                question: "O agronegócio moderno é altamente tecnológico (GPS, drones, maquinário pesado). O que essa 'modernização' costuma causar socialmente no campo?",
                 options: [
                     "Aumento da necessidade de trabalho braçal em todas as lavouras.",
-                    "Diminuição dos postos de trabalho no campo, gerando o êxodo rural (pessoas migrando para a cidade).",
-                    "Fixação permanente das famílias no campo, sem necessidade de ir para a cidade.",
-                    "Barateamento imediato das tecnologias para os pequenos agricultores familiares."
+                    "Diminuição dos postos de trabalho no campo, gerando o êxodo rural (migração para a cidade).",
+                    "Fixação permanente de todas as famílias camponesas no interior.",
+                    "Barateamento imediato das tecnologias para os pequenos produtores."
                 ],
                 correctAnswer: 1
             },
-            // Pergunta 7: Agricultura Familiar - Resiliência
             {
                 cor: "#16a085",
                 emoji: "🥕",
-                question: "Em uma propriedade de agricultura familiar, é muito comum observar a 'policultura'. O que isso significa e por que é bom?",
+                question: "Em uma propriedade de agricultura familiar, é muito comum a prática da 'policultura'. O que isso significa?",
                 options: [
-                    "Significa plantar apenas uma cultura (como milho) para esgotar o solo mais rápido.",
-                    "Significa cultivar várias espécies de plantas na mesma área, o que protege o solo e diminui o risco de perder tudo para uma praga.",
-                    "É o ato de criar gado e não plantar nada.",
-                    "Significa usar várias marcas diferentes de agrotóxicos na mesma planta."
+                    "Plantar apenas uma cultura repetidamente para esgotar o solo.",
+                    "Cultivar várias espécies de plantas na mesma área, protegendo o solo e diminuindo os riscos econômicos e biológicos.",
+                    "Criar gado sem realizar nenhum tipo de plantio.",
+                    "Usar diferentes marcas de fertilizantes químicos ao mesmo tempo."
+                ],
+                correctAnswer: 1
+            },
+            {
+                cor: "#34495e",
+                emoji: "📜",
+                question: "O que é a prática criminosa da 'grilagem' de terras, infelizmente comum em algumas regiões de fronteira agrícola no Brasil?",
+                options: [
+                    "A criação de insetos para controle biológico de pragas.",
+                    "A falsificação de documentos para tomar posse ilegal de terras públicas, indígenas ou de terceiros.",
+                    "A distribuição legal de lotes pelo Instituto Nacional de Colonização e Reforma Agrária (INCRA).",
+                    "A técnica de medir as terras usando métodos antigos."
+                ],
+                correctAnswer: 1
+            },
+            {
+                cor: "#e67e22",
+                emoji: "⚖️",
+                question: "Qual é o objetivo principal da política de Reforma Agrária?",
+                options: [
+                    "Concentrar ainda mais terras nas mãos de grandes empresas multinacionais.",
+                    "Transformar todas as terras agrícolas do país em parques nacionais fechados.",
+                    "Redistribuir propriedades improdutivas para famílias camponesas, promovendo justiça social e diminuindo a desigualdade.",
+                    "Isentar os latifundiários do pagamento de qualquer imposto territorial."
+                ],
+                correctAnswer: 2
+            },
+            {
+                cor: "#9b59b6",
+                emoji: "🧪",
+                question: "O Brasil é um dos maiores consumidores de agrotóxicos do mundo. Qual é o argumento do agronegócio e a crítica dos ambientalistas, respectivamente?",
+                options: [
+                    "Agronegócio: Garante alta produtividade. Ambientalistas: Contamina solo, água e gera riscos à saúde.",
+                    "Agronegócio: Aumenta a biodiversidade. Ambientalistas: Deixa os produtos muito caros.",
+                    "Agronegócio: É uma técnica antiga e natural. Ambientalistas: Atrai novas pragas.",
+                    "Agronegócio: Ajuda a agricultura familiar. Ambientalistas: É ineficiente contra insetos."
+                ],
+                correctAnswer: 0
+            },
+            {
+                cor: "#c0392b",
+                emoji: "✊",
+                question: "Qual a importância dos Movimentos Sociais camponeses na geografia agrária do Brasil?",
+                options: [
+                    "Eles buscam transformar o Brasil em um país onde a agricultura seja proibida.",
+                    "Eles lutam pela democratização do acesso à terra e cobram o cumprimento da função social da propriedade.",
+                    "Eles defendem a expansão imediata do desmatamento na Amazônia.",
+                    "Eles representam exclusivamente os interesses das grandes corporações estrangeiras de sementes."
                 ],
                 correctAnswer: 1
             }
@@ -312,28 +396,29 @@
                 } else {
                     showResults();
                 }
-            }, 2500); // Aumentei o tempo de espera para 2.5 segundos para a pessoa conseguir ler a resposta certa
+            }, 2500); 
         }
 
         function updateUI() {
-            document.getElementById('question-counter').textContent = `Pergunta ${currentQuestionIndex + 1} de ${questions.length}`;
-            document.getElementById('score-display').textContent = `Pontos: ${score}`;
+            document.getElementById('question-counter').textContent = `Questão ${currentQuestionIndex + 1} de ${questions.length}`;
+            document.getElementById('score-display').textContent = `Acertos: ${score}`;
         }
 
         function showResults() {
             document.getElementById('quiz-screen').style.display = 'none';
             document.getElementById('result-screen').style.display = 'block';
             
-            document.getElementById('final-score-text').textContent = `Você acertou ${score} de ${questions.length} perguntas.`;
+            document.getElementById('final-score-text').textContent = `Você acertou ${score} de ${questions.length} questões.`;
             
             const feedbackText = document.getElementById('feedback-text');
             let percentage = (score / questions.length) * 100;
-            if (percentage === 100) {
-                feedbackText.textContent = "Excelente! Você tem uma visão crítica e profunda sobre o campo brasileiro.";
-            } else if (percentage >= 50) {
-                feedbackText.textContent = "Bom trabalho! Você compreende bem a complexidade da nossa agricultura.";
+            
+            if (percentage >= 90) {
+                feedbackText.textContent = "Nota A! Você demonstrou profundo conhecimento sobre as dinâmicas e conflitos do espaço agrário brasileiro.";
+            } else if (percentage >= 60) {
+                feedbackText.textContent = "Muito bom! Você entende os conceitos principais da nossa geografia agrária.";
             } else {
-                feedbackText.textContent = "Há muito o que aprender sobre nossa terra e a disputa de espaços no campo. Tente novamente!";
+                feedbackText.textContent = "Recomendamos revisar alguns conceitos sobre estrutura fundiária e modelos de produção. Continue estudando!";
             }
         }
 
@@ -345,3 +430,10 @@
     </script>
 </body>
 </html>
+
+ 
+
+
+    
+            
+ 
