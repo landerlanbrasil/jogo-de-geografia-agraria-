@@ -264,7 +264,6 @@
     </div>
 
     <script>
-        // Banco de Perguntas (11 questões)
         const questions = [
             { cor: "#e74c3c", emoji: "☠️", question: "O modelo tradicional do agronegócio frequentemente utiliza grandes extensões de terra para o cultivo de uma única espécie (monocultura). Qual é um dos principais impactos negativos dessa prática para o meio ambiente?", options: ["Aumenta a diversidade de animais silvestres na região.", "Causa o esgotamento dos nutrientes do solo e exige uso intenso de agrotóxicos.", "Promove a regeneração natural das florestas nativas.", "Reduz drasticamente o consumo de água na região."], correctAnswer: 1 },
             { cor: "#2980b9", emoji: "📈", question: "Apesar das críticas ambientais, o agronegócio tem uma importância indiscutível para a economia do Brasil. Qual é o seu principal ponto positivo?", options: ["Gera grande superávit na balança comercial devido à alta exportação de commodities.", "Distribui terras de forma igualitária para todos os trabalhadores rurais.", "Produz exclusivamente hortaliças para consumo nas pequenas cidades.", "Não necessita de nenhuma ajuda ou financiamento do governo."], correctAnswer: 0 },
@@ -279,13 +278,11 @@
             { cor: "#c0392b", emoji: "✊", question: "Qual a importância dos Movimentos Sociais camponeses na geografia agrária do Brasil?", options: ["Eles buscam transformar o Brasil em um país onde a agricultura seja proibida.", "Eles lutam pela democratização do acesso à terra e cobram o cumprimento da função social da propriedade.", "Eles defendem a expansão imediata do desmatamento na Amazônia.", "Eles representam exclusivamente os interesses das grandes corporações estrangeiras de sementes."], correctAnswer: 1 }
         ];
 
-        // Variáveis de Estado
         let currentPlayer = "";
         let currentQuestionIndex = 0;
         let score = 0;
         let canAnswer = true;
 
-        // Funções de Navegação de Telas
         function switchScreen(screenId) {
             document.querySelectorAll('.screen').forEach(screen => {
                 screen.classList.remove('active');
@@ -294,11 +291,10 @@
         }
 
         function showMenu() {
-            document.getElementById('player-name').value = ""; // Limpa o nome
+            document.getElementById('player-name').value = ""; 
             switchScreen('menu-screen');
         }
 
-        // Lógica do Jogo
         function startGame() {
             const nameInput = document.getElementById('player-name').value.trim();
             if (nameInput === "") {
@@ -388,27 +384,17 @@
             switchScreen('result-screen');
         }
 
-        // Sistema de Ranking (LocalStorage)
         function saveScoreToRanking() {
-            // Busca o ranking salvo ou cria um novo array vazio
             let ranking = JSON.parse(localStorage.getItem('agrariaRanking')) || [];
-            
-            // Adiciona a pontuação atual
             ranking.push({ name: currentPlayer, score: score });
-            
-            // Ordena do maior para o menor
             ranking.sort((a, b) => b.score - a.score);
-            
-            // Mantém apenas os 10 melhores
             ranking = ranking.slice(0, 10);
-            
-            // Salva de volta no navegador
             localStorage.setItem('agrariaRanking', JSON.stringify(ranking));
         }
 
         function showRanking() {
             const rankingList = document.getElementById('ranking-list-container');
-            rankingList.innerHTML = ''; // Limpa a lista atual
+            rankingList.innerHTML = ''; 
             
             let ranking = JSON.parse(localStorage.getItem('agrariaRanking')) || [];
             
